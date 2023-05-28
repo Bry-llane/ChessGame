@@ -59,6 +59,7 @@ chessboard create_board ()
 
     B->nb_joueur = 2;
     B->position = 0;
+    B->menu = 1;
     B->manche = BLANC;
     B->board = b;
     return B;

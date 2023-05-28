@@ -6,13 +6,20 @@
 #include <unistd.h>
 #include "move.h"
 
+
+#define TAILLE_CASE 70
+#define TAILLE_SEPARATION 6
+#define TAILLE_T (TAILLE_CASE+TAILLE_SEPARATION)
+#define ESPACE_BOARD 90
+#define BARRE_SEPARATION (8 * TAILLE_T) + TAILLE_SEPARATION + (2 * ESPACE_BOARD)
+
 // Dimensions de la fenêtre
-#define SCREEN_WIDTH 900
-#define SCREEN_HEIGHT 400
+#define SCREEN_WIDTH 1200
+#define SCREEN_HEIGHT 794
 
 // Polices
 #define FONT_SIZE 24
-#define FONT_PATH "front.ttf"
+#define FONT_PATH "./format/font.ttf"
 
 typedef struct {
     SDL_Rect rect;  // Rectangle pour la position et la taille du bouton

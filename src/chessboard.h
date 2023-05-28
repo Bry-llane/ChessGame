@@ -11,6 +11,7 @@ typedef struct chessboard {
     int nb_joueur;
     int position;
     color manche;
+    int menu;
 } *chessboard;
 
 chessboard create_board ();
