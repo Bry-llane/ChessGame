@@ -11,8 +11,8 @@ SDL_Window* create_window(const char* title, chessboard b)
     SDL_Window* window = SDL_CreateWindow(title,
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
-                              (8*TAILLE_T)+TAILLE_SEPARATION,
-                              (8*TAILLE_T)+TAILLE_SEPARATION,
+                              SCREEN_WIDTH,
+                              SCREEN_HEIGHT,
                               SDL_WINDOW_SHOWN);
 
     if (!window)
@@ -253,7 +253,7 @@ void new_game()
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
 
-    window = create_window("Morpion", b);
+    window = create_window("chess", b);
     renderer = create_renderer(window);
     draw_morpion(renderer, b);
 
