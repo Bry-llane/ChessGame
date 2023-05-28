@@ -183,19 +183,19 @@ void Draw_morpion(SDL_Renderer* renderer, chessboard b)
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     SDL_Rect rectangle;
-    for (int x = 0; x <= (b->colonne*TAILLE_T)+TAILLE_SEPARATION; x+=TAILLE_T){
+    for (int x = 0; x <= (8*TAILLE_T)+TAILLE_SEPARATION; x+=TAILLE_T){
         rectangle.x = x;
         rectangle.y = 0;
         rectangle.w = TAILLE_SEPARATION;
-        rectangle.h = (b->ligne*TAILLE_T)+TAILLE_SEPARATION;
+        rectangle.h = (8*TAILLE_T)+TAILLE_SEPARATION;
 
         SDL_RenderFillRect(renderer, &rectangle);
     }
 
-    for (int y = 0; y <= (b->ligne*TAILLE_T)+TAILLE_SEPARATION; y+=TAILLE_T){
+    for (int y = 0; y <= (8*TAILLE_T)+TAILLE_SEPARATION; y+=TAILLE_T){
         rectangle.x = 0;
         rectangle.y = y;
-        rectangle.w = (b->colonne*TAILLE_T)+TAILLE_SEPARATION;
+        rectangle.w = (8*TAILLE_T)+TAILLE_SEPARATION;
         rectangle.h = TAILLE_SEPARATION;
 
         SDL_RenderFillRect(renderer, &rectangle);
