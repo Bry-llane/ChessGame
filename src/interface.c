@@ -178,7 +178,7 @@ void rename_save()
 //Dessiner le plateau de jeu
 void draw_morpion(SDL_Renderer* renderer, chessboard b)
 {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 80, 143, 255);  //bleu fonce
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
