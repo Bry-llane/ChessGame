@@ -656,19 +656,21 @@ void render_menu(SDL_Renderer* renderer, chessboard b)
     }
 
     if(b->menu == 3){
-    	t = " Position du Joueur ";
-    	b1 = " 0 ";
-    	b2 = " 1 ";
-    	b3 = " 2 ";
-    	b4 = " Quit ";
+    	if(b->nb_joueur == 1){
+    	    t = " Position du Joueur ";
+    	    b1 = " 1 ";
+    	    b2 = " 2 ";
+    	    b3 = " Quit ";
+    	    b4 = "  ";
+    	}
     }
     
     if(b->menu == 4){
     	t = " Partie en cours ";
     	b1 = " Save ";
-    	b2 = " Delete ";
-    	b3 = " Quit ";
-    	b4 = " Quit ";
+    	b2 = " Quit ";
+    	b3 = "  ";
+    	b4 = "  ";
     }
     
     if(b->menu == 5){
@@ -719,6 +721,14 @@ void render_menu(SDL_Renderer* renderer, chessboard b)
     	b4 = " Quit ";
     }
     
+    if(b->menu == 7){
+    	t = " Promotion ";
+    	b1 = " TOUR ";
+    	b2 = " CAVALIER ";
+    	b3 = " FOU ";
+    	b4 = " REINE ";
+    }
+    
     
     // Les boutons
     int y = 2 * ESPACE_BOARD;
@@ -730,15 +740,33 @@ void render_menu(SDL_Renderer* renderer, chessboard b)
     y+=125;
     button button2 = createbutton(renderer, font, b2, BARRE_SEPARATION + 60, y);
     y+=125;
-    button button3 = createbutton(renderer, font, b3, BARRE_SEPARATION + 60, y);
+    button button3;
+    if(b->menu == 4){
+    	button3 = createtitle(renderer, font, b3, BARRE_SEPARATION + 60, y);
+    } else {
+        button3 = createbutton(renderer, font, b3, BARRE_SEPARATION + 60, y);
+    }
     y+=125;
-    button button4 = createbutton(renderer, font, b4, BARRE_SEPARATION + 60, y);
+    button button4;
+    if(b->menu == 4 || b->menu == 3){
+    	button4 = createtitle(renderer, font, b4, BARRE_SEPARATION + 60, y);
+    } else {
+        button4 = createbutton(renderer, font, b4, BARRE_SEPARATION + 60, y);
+    }
 
     drawtitle(renderer, title);
     drawbutton(renderer, button1);
     drawbutton(renderer, button2);
-    drawbutton(renderer, button3);
-    drawbutton(renderer, button4);
+    if(b->menu == 4){
+    	drawtitle(renderer, button3);
+    } else {
+        drawbutton(renderer, button3);
+    }
+    if(b->menu == 4 ||  b->menu == 3){
+    	drawtitle(renderer, button4);
+    } else {
+        drawbutton(renderer, button4);
+    }
 
     SDL_RenderPresent(renderer);
 }
@@ -770,8 +798,12 @@ void new_game()
         SDL_Quit();
         return 1;
     }
-    b->menu = 1;
-    render_menu(renderer, b);
+    
+    for(int i = 1; i < 8; i++){
+        b->menu = i;
+        render_menu(renderer, b);
+        sleep(1);
+    }
 
     SDL_RenderPresent(renderer);
     //Manche(renderer, b, 1, b->colonne * b->ligne);

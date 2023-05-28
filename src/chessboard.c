@@ -57,7 +57,7 @@ chessboard create_board ()
     b[0][4] = create_piece(ROI, NOIR);
     b[7][4] = create_piece(ROI, BLANC);
 
-    B->nb_joueur = 2;
+    B->nb_joueur = 1;
     B->position = 0;
     B->menu = 1;
     B->manche = BLANC;
