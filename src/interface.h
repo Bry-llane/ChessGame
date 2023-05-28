@@ -6,6 +6,14 @@
 #include <unistd.h>
 #include "move.h"
 
+// Dimensions de la fenêtre
+#define SCREEN_WIDTH 400
+#define SCREEN_HEIGHT 900
+
+// Polices
+#define FONT_SIZE 24
+#define FONT_PATH "front.ttf"
+
 typedef struct {
     SDL_Rect rect;  // Rectangle pour la position et la taille du bouton
     SDL_Texture* texture;  // Texture pour le texte du bouton

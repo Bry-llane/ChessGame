@@ -205,6 +205,7 @@ void draw_morpion(SDL_Renderer* renderer, chessboard b)
 // Fonction pour créer un bouton
 Button createButton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y) {
     Button button;
+    SDL_Color COLOR_WHITE = {255, 255, 255, 255};
 
     // Création de la surface de texte
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, COLOR_WHITE);
@@ -234,6 +235,7 @@ Button createButton(SDL_Renderer* renderer, TTF_Font* font, const char* text, in
 
 // Fonction pour dessiner un bouton
 void drawButton(SDL_Renderer* renderer, Button button) {
+    SDL_Color COLOR_RED = {255, 0, 0, 255};
     // Dessiner le rectangle du bouton
     SDL_SetRenderDrawColor(renderer, COLOR_RED.r, COLOR_RED.g, COLOR_RED.b, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(renderer, &button.rect);

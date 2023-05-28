@@ -4,18 +4,6 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
-// Dimensions de la fenêtre
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
-
-// Couleurs
-SDL_Color COLOR_WHITE = {255, 255, 255, 255};
-SDL_Color COLOR_RED = {255, 0, 0, 255};
-
-// Polices
-#define FONT_SIZE 24
-#define FONT_PATH "front.ttf"
-
 /*
 int main(int argc, char** argv) {
     // Initialisation de SDL
