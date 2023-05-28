@@ -1,0 +1,8 @@
+/bin
+/include
+/lib
+/obj
+/ChessGame.cbp
+/ChessGame.depend
+/ChessGame.layout
+/SDL2.dll
