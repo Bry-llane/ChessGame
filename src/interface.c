@@ -1,7 +1,3 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "move.h"
 #include "interface.h"
 
 #define TAILLE_CASE 70
@@ -179,6 +175,34 @@ void Rename_save()
 
 
 ///=========================================================
+//Dessiner le plateau de jeu
+void Draw_morpion(SDL_Renderer* renderer, chessboard b)
+{
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    SDL_Rect rectangle;
+    for (int x = 0; x <= (b->colonne*TAILLE_T)+TAILLE_SEPARATION; x+=TAILLE_T){
+        rectangle.x = x;
+        rectangle.y = 0;
+        rectangle.w = TAILLE_SEPARATION;
+        rectangle.h = (b->ligne*TAILLE_T)+TAILLE_SEPARATION;
+
+        SDL_RenderFillRect(renderer, &rectangle);
+    }
+
+    for (int y = 0; y <= (b->ligne*TAILLE_T)+TAILLE_SEPARATION; y+=TAILLE_T){
+        rectangle.x = 0;
+        rectangle.y = y;
+        rectangle.w = (b->colonne*TAILLE_T)+TAILLE_SEPARATION;
+        rectangle.h = TAILLE_SEPARATION;
+
+        SDL_RenderFillRect(renderer, &rectangle);
+    }
+}
+
+///=========================================================
 //Lancer une nouvelle partie
 void New_game()
 {
@@ -189,6 +213,7 @@ void New_game()
 
     window = Create_window("Morpion", b);
     renderer = Create_renderer(window);
+    Draw_morpion(renderer, b);
 
     //Draw_morpion(renderer, b);
 

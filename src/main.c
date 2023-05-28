@@ -14,7 +14,7 @@ SDL_Color COLOR_RED = {255, 0, 0, 255};
 
 // Polices
 #define FONT_SIZE 24
-#define FONT_PATH "arial.ttf"
+#define FONT_PATH "front.ttf"
 
 // Structure pour représenter un bouton
 typedef struct {
