@@ -7,8 +7,8 @@
 #include "move.h"
 
 // Dimensions de la fenêtre
-#define SCREEN_WIDTH 400
-#define SCREEN_HEIGHT 900
+#define SCREEN_WIDTH 900
+#define SCREEN_HEIGHT 400
 
 // Polices
 #define FONT_SIZE 24
