@@ -203,8 +203,8 @@ void draw_morpion(SDL_Renderer* renderer, chessboard b)
 }
 
 // Fonction pour créer un bouton
-Button createButton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y) {
-    Button button;
+button createbutton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y) {
+    button but;
     SDL_Color COLOR_WHITE = {255, 255, 255, 255};
 
     // Création de la surface de texte
@@ -215,8 +215,8 @@ Button createButton(SDL_Renderer* renderer, TTF_Font* font, const char* text, in
     }
 
     // Création de la texture à partir de la surface
-    button.texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (button.texture == NULL) {
+    but.texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (but.texture == NULL) {
         printf("Erreur lors de la création de la texture du bouton : %s\n", SDL_GetError());
         SDL_FreeSurface(surface);
         exit(1);
@@ -226,22 +226,22 @@ Button createButton(SDL_Renderer* renderer, TTF_Font* font, const char* text, in
     SDL_FreeSurface(surface);
 
     // Définition de la position et de la taille du bouton
-    button.rect.x = x;
-    button.rect.y = y;
-    SDL_QueryTexture(button.texture, NULL, NULL, &button.rect.w, &button.rect.h);
+    but.rect.x = x;
+    but.rect.y = y;
+    SDL_QueryTexture(but.texture, NULL, NULL, &but.rect.w, &but.rect.h);
 
-    return button;
+    return but;
 }
 
 // Fonction pour dessiner un bouton
-void drawButton(SDL_Renderer* renderer, Button button) {
+void drawbutton(SDL_Renderer* renderer, button but) {
     SDL_Color COLOR_RED = {255, 0, 0, 255};
     // Dessiner le rectangle du bouton
     SDL_SetRenderDrawColor(renderer, COLOR_RED.r, COLOR_RED.g, COLOR_RED.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(renderer, &button.rect);
+    SDL_RenderFillRect(renderer, &but.rect);
 
     // Dessiner le texte du bouton
-    SDL_RenderCopy(renderer, button.texture, NULL, &button.rect);
+    SDL_RenderCopy(renderer, but.texture, NULL, &but.rect);
 }
 
 ///=========================================================
