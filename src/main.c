@@ -16,52 +16,7 @@ SDL_Color COLOR_RED = {255, 0, 0, 255};
 #define FONT_SIZE 24
 #define FONT_PATH "front.ttf"
 
-// Structure pour représenter un bouton
-typedef struct {
-    SDL_Rect rect;  // Rectangle pour la position et la taille du bouton
-    SDL_Texture* texture;  // Texture pour le texte du bouton
-} Button;
-
-// Fonction pour créer un bouton
-Button createButton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y) {
-    Button button;
-
-    // Création de la surface de texte
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text, COLOR_WHITE);
-    if (surface == NULL) {
-        printf("Erreur lors de la création de la surface de texte : %s\n", TTF_GetError());
-        exit(1);
-    }
-
-    // Création de la texture à partir de la surface
-    button.texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (button.texture == NULL) {
-        printf("Erreur lors de la création de la texture du bouton : %s\n", SDL_GetError());
-        SDL_FreeSurface(surface);
-        exit(1);
-    }
-
-    // Libération de la surface
-    SDL_FreeSurface(surface);
-
-    // Définition de la position et de la taille du bouton
-    button.rect.x = x;
-    button.rect.y = y;
-    SDL_QueryTexture(button.texture, NULL, NULL, &button.rect.w, &button.rect.h);
-
-    return button;
-}
-
-// Fonction pour dessiner un bouton
-void drawButton(SDL_Renderer* renderer, Button button) {
-    // Dessiner le rectangle du bouton
-    SDL_SetRenderDrawColor(renderer, COLOR_RED.r, COLOR_RED.g, COLOR_RED.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(renderer, &button.rect);
-
-    // Dessiner le texte du bouton
-    SDL_RenderCopy(renderer, button.texture, NULL, &button.rect);
-}
-
+/*
 int main(int argc, char** argv) {
     // Initialisation de SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -161,5 +116,11 @@ int main(int argc, char** argv) {
     TTF_Quit();
     SDL_Quit();
 
+    return 0;
+}*/
+
+int main()
+{
+    new_game();
     return 0;
 }

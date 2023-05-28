@@ -11,13 +11,13 @@ typedef struct {
     SDL_Texture* texture;  // Texture pour le texte du bouton
 } button;
 
-SDL_Window* Create_window(const char* title, chessboard b);
-SDL_Renderer* Create_renderer(SDL_Window* window);
-void Destroy_window_and_renderer(SDL_Window* window, SDL_Renderer* renderer);
-SDL_Texture* LoadTexture(SDL_Renderer* renderer, char* path);
-int IsInt();
-bool ExisteFile(char* file);
-void Rename_save();
+SDL_Window* create_window(const char* title, chessboard b);
+SDL_Renderer* create_renderer(SDL_Window* window);
+void cestroy_window_and_renderer(SDL_Window* window, SDL_Renderer* renderer);
+SDL_Texture* loadTexture(SDL_Renderer* renderer, char* path);
+int isInt();
+bool existeFile(char* file);
+void rename_save();
 
 
 #endif
