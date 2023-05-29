@@ -13,6 +13,7 @@
 #define ESPACE_BOARD 90
 #define BARRE_SEPARATION (8 * TAILLE_T) + TAILLE_SEPARATION + (2 * ESPACE_BOARD)
 
+
 // Dimensions de la fenêtre
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 794
@@ -26,9 +27,9 @@ typedef struct {
     SDL_Texture* texture;  // Texture pour le texte du bouton
 } button;
 
-SDL_Window* create_window(const char* title, chessboard b);
+SDL_Window* create_window(const char* title);
 SDL_Renderer* create_renderer(SDL_Window* window);
-void cestroy_window_and_renderer(SDL_Window* window, SDL_Renderer* renderer);
+void destroy_window_and_renderer(SDL_Window* window, SDL_Renderer* renderer);
 SDL_Texture* loadTexture(SDL_Renderer* renderer, char* path);
 int isInt();
 bool existeFile(char* file);

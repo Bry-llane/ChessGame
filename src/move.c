@@ -1,43 +1,4 @@
 #include "move.h"
-/*
-pos* deplacement_valide_pion(piece p, pos from, chessboard b, int *nb_deplacements)
-{
-    pos *deplacements = malloc(4 * sizeof(pos)); // Le pion a au plus 4 déplacements valides (1 vers le bas, 2 en diagonale)
-    *nb_deplacements = 0; // Réinitialiser le nombre de déplacements
-
-    if (piece_color(p) == NOIR) {
-        if (from.y + 1 < 8 && b->board[from.y + 1][from.x] == NULL) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x, from.y + 1};
-        }
-        if (from.y + 1 < 8 && from.x + 1 < 8 && b->board[from.y + 1][from.x + 1] != NULL && piece_color(b->board[from.y + 1][from.x + 1]) != piece_color(p)) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x + 1, from.y + 1};
-        }
-        if (from.y + 1 < 8 && from.x - 1 >= 0 && b->board[from.y + 1][from.x - 1] != NULL && piece_color(b->board[from.y + 1][from.x - 1]) != piece_color(p)) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x - 1, from.y + 1};
-        }
-        if (from.y = 1 && b->board[from.y + 2][from.x] == NULL) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x, from.y + 2};
-        }
-    }
-
-    if (piece_color(p) == BLANC) {
-        if (from.y - 1 >= 0 && b->board[from.y - 1][from.x] == NULL) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x, from.y - 1};
-        }
-        if (from.y - 1 >= 0 && from.x - 1 >= 0 && b->board[from.y - 1][from.x - 1] != NULL && piece_color(b->board[from.y - 1][from.x - 1]) != piece_color(p)) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x - 1, from.y - 1};
-        }
-        if (from.y - 1 >= 0 && from.x + 1 < 8 && b->board[from.y - 1][from.x + 1] != NULL && piece_color(b->board[from.y - 1][from.x + 1]) != piece_color(p)) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x + 1, from.y - 1};
-        }
-        if (from.y = 6 && b->board[from.y - 2][from.x] == NULL) {
-            deplacements[(*nb_deplacements)++] = (pos){from.x, from.y - 2};
-        }
-    }
-
-    return realloc(deplacements, (*nb_deplacements) * sizeof(pos)); // Réallouer le tableau à la taille exacte
-}
-*/
 
 pos* deplacement_valide_pion(piece p, pos from, chessboard b, int* nb_deplacements)
 {
@@ -399,6 +360,14 @@ bool verifier_mouvement(pos from, pos to, chessboard b)
     // Retourner 0 si le roi est en échec, sinon 1
     return !est_echec;
 }
+
+bool deplacement(pos from, pos to, chessboard b)
+{
+    // Effectuer le déplacement
+    b->board[to.y][to.x] = b->board[from.y][from.x];
+    b->board[from.y][from.x] = NULL;
+}
+
 
 /*
 bool verifier_mouvement(piece piece, pos from, pos to, chessboard b) {

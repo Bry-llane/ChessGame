@@ -15,5 +15,6 @@ void annuler_deplacement(chessboard b, pos from, pos to, piece captured_piece);
 bool est_en_echec(piece roi, pos position_roi, chessboard b);
 bool est_en_echec_et_mat(piece roi, pos position_roi, chessboard b);
 bool verifier_mouvement(pos from, pos to, chessboard b);
+bool deplacement(pos from, pos to, chessboard b);
 
 #endif

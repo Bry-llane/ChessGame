@@ -57,10 +57,9 @@ chessboard create_board ()
     b[0][4] = create_piece(ROI, NOIR);
     b[7][4] = create_piece(ROI, BLANC);
 
-    B->nb_joueur = 1;
+    B->nb_joueur = 0;
     B->position = 0;
-    B->menu = 1;
-    B->manche = BLANC;
+    B->manche = 1;
     B->board = b;
     return B;
 }
@@ -184,24 +183,18 @@ bool sameDiagonalNothingBetween(pos from, pos to, chessboard b)
     return true;
 }
 
-chessboard create_board_vide ()
+void vider_board(chessboard B)
 {
-    chessboard B = (chessboard)malloc(sizeof(struct chessboard));
-
-    piece **b = (piece **)malloc(8*sizeof(piece*));
-    for (int i=0; i<8; i++){
-        b[i] = (piece*)malloc(8*sizeof(piece));
-    }
-
     //cases vides
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
-            b[i][j] = NULL;
+            B->board[i][j] = NULL;
         }
     }
-
-    B->board = b;
-    return B;
+    
+    B->nb_joueur = 0;
+    B->position = 0;
+    B->manche = 1;
 }
 
 pos recup_roi(piece piece, chessboard b)
@@ -220,4 +213,200 @@ pos recup_roi(piece piece, chessboard b)
         }
     }
     return p;
+}
+
+pos recup_roi_with_color(color c, chessboard b)
+{
+    pos p = { -1, -1 };
+
+    for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < 8; x++) {
+            if (b->board[y][x] != NULL){
+                if (b->board[y][x]->typePiece == ROI && piece_color(b->board[y][x]) == c) {
+                    p.x = x;
+                    p.y = y;
+                    return p;
+                }
+           }
+        }
+    }
+    return p;
+}
+
+void sauvegarder_plateau(chessboard b, const char* nom_fichier) {
+    // Vérifier les paramètres
+    if (b == NULL || b->board == NULL || nom_fichier == NULL) {
+        printf("Erreur : Parametres invalides.\n");
+        return;
+    }
+    
+    // Ouvrir le fichier en mode écriture
+    FILE* fichier = fopen(nom_fichier, "w");
+    if (fichier == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", nom_fichier);
+        return;
+    }
+    
+    // Parcourir le plateau et écrire les pièces dans le fichier
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            piece p = b->board[i][j];
+            if (p != NULL) {
+                char symbole_piece;
+                switch (p->typePiece) {
+                    case PION:
+                        symbole_piece = 'p';
+                        break;
+                    case FOU:
+                        symbole_piece = 'f';
+                        break;
+                    case CAVALIER:
+                        symbole_piece = 'c';
+                        break;
+                    case TOUR:
+                        symbole_piece = 't';
+                        break;
+                    case REINE:
+                        symbole_piece = 'r';
+                        break;
+                    case ROI:
+                        symbole_piece = 'k';
+                        break;
+                    default:
+                        symbole_piece = ' ';
+                        break;
+                }
+                if (p->couleur == BLANC) {
+                    symbole_piece = toupper(symbole_piece);
+                }
+                fprintf(fichier, "%c ", symbole_piece);
+            } else {
+                fprintf(fichier, "n");
+            }
+        }
+        fprintf(fichier, "\n");
+    }
+    
+    // Écrire les autres informations dans le fichier
+    fprintf(fichier, "%d\n", b->nb_joueur);
+    fprintf(fichier, "%d\n", b->position);
+    fprintf(fichier, "%d\n", b->manche);
+    
+    // Fermer le fichier
+    fclose(fichier);
+    printf("Le plateau a ete sauvegarde dans le fichier %s.\n", nom_fichier);
+}
+
+void charger_plateau(chessboard b, const char* nom_fichier) {
+    // Vérifier les paramètres
+    if (b == NULL || b->board == NULL || nom_fichier == NULL) {
+        printf("Erreur : Paramètres invalides.\n");
+        return;
+    }
+    
+    // Ouvrir le fichier en mode lecture
+    FILE* fichier = fopen(nom_fichier, "r");
+    if (fichier == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", nom_fichier);
+        return;
+    }
+    
+    // Réinitialiser toutes les pièces du plateau à NULL
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            b->board[i][j] = NULL;
+        }
+    }
+    
+    // Parcourir le fichier et charger les pièces sur le plateau
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            char symbole_piece;
+            if (fscanf(fichier, "%c ", &symbole_piece) == 1) {
+                shape typePiece;
+                color couleur;
+                switch (tolower(symbole_piece)) {
+                    case 'p':
+                        typePiece = PION;
+                        break;
+                    case 'f':
+                        typePiece = FOU;
+                        break;
+                    case 'c':
+                        typePiece = CAVALIER;
+                        break;
+                    case 't':
+                        typePiece = TOUR;
+                        break;
+                    case 'r':
+                        typePiece = REINE;
+                        break;
+                    case 'k':
+                        typePiece = ROI;
+                        break;
+                    default:
+                        typePiece = -1;  // Valeur invalide pour une pièce
+                        break;
+                }
+                couleur = isupper(symbole_piece) ? BLANC : NOIR;
+                b->board[i][j] = create_piece(typePiece, couleur);
+            } else {
+                printf("Erreur : Format de fichier incorrect.\n");
+                fclose(fichier);
+                return;
+            }
+        }
+        fscanf(fichier, "\n");
+    }
+    
+    // Charger les autres informations du fichier
+    if (fscanf(fichier, "%d", &(b->nb_joueur)) != 1 ||
+        fscanf(fichier, "%d", &(b->position)) != 1 ||
+        fscanf(fichier, "%d", &(b->manche)) != 1) {
+        printf("Erreur : Format de fichier incorrect.\n");
+        fclose(fichier);
+        return;
+    }
+    
+    // Fermer le fichier
+    fclose(fichier);
+    printf("Le plateau a été chargé depuis le fichier %s.\n", nom_fichier);
+}
+
+void faire_promotion(chessboard b, int sh) {
+    // Vérifier le paramètre
+    if (b == NULL || b->board == NULL) {
+        printf("Erreur : Parametre invalide.\n");
+        return;
+    }
+    
+    // Parcourir le plateau
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            piece p = b->board[i][j];
+            if (p != NULL && p->typePiece == PION) {
+                // Vérifier si le pion doit être promu
+                if ((p->couleur == BLANC && i == 0) || (p->couleur == NOIR && i == 7)) {
+                    switch (sh) {
+                        case 1:
+                            p->typePiece = TOUR;
+                            break;
+                        case 2:
+                            p->typePiece = CAVALIER;
+                            break;
+                        case 3:
+                            p->typePiece = FOU;
+                            break;
+                        case 4:
+                            p->typePiece = REINE;
+                            break;
+                        default:
+                            printf("Choix invalide. Le pion sera promu en Reine par defaut.\n");
+                            p->typePiece = REINE;
+                            break;
+                    }
+                }
+            }
+        }
+    }
 }
