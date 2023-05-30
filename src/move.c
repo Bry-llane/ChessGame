@@ -362,7 +362,7 @@ bool verifier_mouvement(pos from, pos to, chessboard b)
     return !est_echec;
 }
 
-bool deplacement(pos from, pos to, chessboard b)
+void deplacement(pos from, pos to, chessboard b)
 {
     // Effectuer le déplacement
     b->board[to.y][to.x] = b->board[from.y][from.x];
@@ -377,28 +377,17 @@ pos trouver_piece_aleatoire(chessboard b, color couleur) {
         return (pos) { -1, -1 }; // Retourner une position invalide
     }
     
-    // Générer une liste de positions valides pour les pièces de la couleur donnée
-    pos positions_valides[64]; // Tableau de positions valides (max 64 cases)
-    int nb_positions_valides = 0; // Nombre de positions valides trouvées
-    
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            piece p = b->board[i][j];
-            if (p != NULL && p->couleur == couleur) {
-                positions_valides[nb_positions_valides++] = (pos) { i, j };
-            }
+    bool choix = false;
+    pos position;
+    while (!choix) {
+        position.x = rand() % 8;
+        position.y = rand() % 8;
+        if (b->board[position.y][position.x] != NULL && b->board[position.y][position.x]->couleur == couleur){
+            choix = true;
         }
     }
     
-    // Vérifier si des positions valides ont été trouvées
-    if (nb_positions_valides == 0) {
-        printf("Aucune pièce de couleur donnée sur le plateau.\n");
-        return (pos) { -1, -1 }; // Retourner une position invalide
-    }
-    
-    // Sélectionner une position aléatoire parmi les positions valides
-    int indice_aleatoire = rand() % nb_positions_valides;
-    return positions_valides[indice_aleatoire];
+    return position;
 }
 
 pos* IA(chessboard b, color c) {
@@ -406,14 +395,15 @@ pos* IA(chessboard b, color c) {
     pos* deplacement_possible;
     int nb_deplacement_possible;
     pos* move = malloc(2 * sizeof(pos)); // Allouer de l'espace pour les positions "from" et "to"
+    pos from, to;
     
     while (!choix) {
-        pos from = trouver_piece_aleatoire(b, c);
+        from = trouver_piece_aleatoire(b, c);
         
         deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
         if (nb_deplacement_possible > 0) {
             int indice_aleatoire = rand() % nb_deplacement_possible;
-            pos to = deplacement_possible[indice_aleatoire];
+            to = deplacement_possible[indice_aleatoire];
             
             if (verifier_mouvement(from, to, b)) {
                 move[0] = from;

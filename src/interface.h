@@ -33,8 +33,15 @@ void destroy_window_and_renderer(SDL_Window* window, SDL_Renderer* renderer);
 SDL_Texture* loadTexture(SDL_Renderer* renderer, char* path);
 int isInt();
 bool existeFile(char* file);
-void rename_save();
-
+button createbutton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y);
+button createtitle(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y);
+void drawbutton(SDL_Renderer* renderer, button but);
+void draw_board(SDL_Renderer* renderer);
+void actualise_board(SDL_Renderer* renderer, chessboard b);
+void render_menu(SDL_Renderer* renderer, chessboard b, int menu);
+void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu);
+void tour_de_jeu(SDL_Renderer* renderer);
+int game();
 
 #endif
 

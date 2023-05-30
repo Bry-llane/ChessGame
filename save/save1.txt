@@ -2,9 +2,9 @@ t c f r k f c t
 p p p p p p p p 
 nnnnnnnn
 nnnnnnnn
-nnnnnP nn
+nnnP nnnn
 nnnnnnnn
-P P P P P nP P 
+P P P nP P P P 
 T C F R K F C T 
 2
 0

@@ -106,71 +106,6 @@ bool existeFile(char* file)
     }
 }
 
-///=========================================================
-//Renommer un fichier
-void rename_save()
-{
-    printf("\n");
-
-    if(existeFile("./save/save1.txt")){
-        printf("1 : Sauvegarde 1\n");
-    } else {
-        printf("1 : Empty \n");
-    }
-
-    if(existeFile("./save/save2.txt")){
-        printf("2 : Sauvegarde 2\n");
-    } else {
-        printf("2 : Empty \n");
-    }
-
-    if(existeFile("./save/save3.txt")){
-        printf("3 : Sauvegarde 3\n");
-    } else {
-        printf("3 : Empty \n\n");
-    }
-
-    int choix;
-    bool boucle = true;
-
-    while (boucle){
-        printf("Attente du numero choisi : ");
-        choix = isInt();
-
-        switch(choix){
-            case 1:
-                if(existeFile("./save/save1.txt")){
-                    remove("./save/save1.txt");
-                }
-                rename("./src/save.txt", "./save/save1.txt");
-                boucle = false;
-                break;
-
-            case 2:
-                if(existeFile("./save/save2.txt")){
-                    remove("./save/save2.txt");
-                }
-                rename("./src/save.txt", "./save/save2.txt");
-                boucle = false;
-                break;
-
-            case 3:
-                if(existeFile("./save/save3.txt")){
-                    remove("./save/save3.txt");
-                }
-                rename("./src/save.txt", "./save/save3.txt");
-                boucle = false;
-                break;
-
-            case 4:
-                boucle = false;
-                break;
-
-            default:
-                break;
-        }
-    }
-}
 
 // Fonction pour créer un bouton
 button createbutton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y) {
@@ -774,10 +709,13 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
             m = 1;
         }
     } else if (*menu == 3){  //position joueur joueur
-        if(but == 1 || but == 2){
+        if(but == 1){
             b->position = but;
             m = 4;
-        } else if(but == 3) {
+        } else if(but == 2) {
+            b->position = but;
+            m = 4;
+        }else if(but == 3) {
             m = 2;
         }
     } else if (*menu == 5){  //menu load save
@@ -823,11 +761,19 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
         m = 4;
     } else if (*menu == 91){  //blanc win
         if(but == 2){
+            new_board(b);
+            remplir_plateau(b);
             m = 1;
+        } else {
+            m = 91;
         }
-    } else if (*menu == 92){  //menu nb joueur
+    } else if (*menu == 92){  //noir win
         if(but == 2){
+            new_board(b);
+            remplir_plateau(b);
             m = 1;
+        } else {
+            m = 92;
         }
     } 
     
@@ -860,60 +806,20 @@ void tour_de_jeu(SDL_Renderer* renderer)
     position_button[1] = (pos) {xbuton, ybuton + 250};
     position_button[2] = (pos) {xbuton, ybuton + 375};
     position_button[3] = (pos) {xbuton, ybuton + 500};
-    pos* deplacement_possible;
+    pos* deplacement_possible = NULL;
     int nb_deplacement_possible;
     bool ajouer = false;
     
     while (program_launched){
         SDL_Event event;
         
-        /*if(b->nb_joueur == 1 || b->nb_joueur == 0){
-            if(b->manche != b->position){
-                if(b->manche == 1){
-                    bool choix = false;
-    
-		    while (!choix) {
-		        from = trouver_piece_aleatoire(b, BLANC);
-			deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
-			if (nb_deplacement_possible > 0) {
-			    int indice_aleatoire = rand() % nb_deplacement_possible;
-			    to = deplacement_possible[indice_aleatoire];
-			    
-			    if (verifier_mouvement(from, to, b)) {
-				choix = true;
-			    }
-			}
-		    }
-	       	    deplacement(from, to, b);
-		    actualise_board(renderer, b);
-                }  else {
-                    bool choix = false;
-    
-		    while (!choix) {
-		        from = trouver_piece_aleatoire(b, NOIR);
-			deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
-			if (nb_deplacement_possible > 0) {
-			    int indice_aleatoire = rand() % nb_deplacement_possible;
-			    to = deplacement_possible[indice_aleatoire];
-			    
-			    if (verifier_mouvement(from, to, b)) {
-				choix = true;
-			    }
-			}
-		    }
-	       	    deplacement(from, to, b);
-		    actualise_board(renderer, b);
-                }
-                
-            }
-        }*/
-        
 	while(SDL_PollEvent(&event)){
+	        if(menu == 7 ) render_menu(renderer, b, menu);
+	        if(menu == 91 ) render_menu(renderer, b, menu);
+	        if(menu == 92 ) render_menu(renderer, b, menu);
                 switch(event.type)
                 {
                     case SDL_MOUSEBUTTONDOWN:
-
-                        selection_case:
 
                         while(((x+TAILLE_T) < event.button.x) || (x > event.button.x)){
                             x = x + TAILLE_T;
@@ -925,22 +831,37 @@ void tour_de_jeu(SDL_Renderer* renderer)
                             ypos++;
                         }
                         
+                        if(b->nb_joueur == 1){
+                            if(b->manche != b->position){
+                                if(b->manche == 1){
+                                    deplacement_possible = IA(b, BLANC);
+                                    deplacement(deplacement_possible[0], deplacement_possible[1], b);
+                                    b->manche++;
+                                } else if(b->manche == 2){
+                                    deplacement_possible = IA(b, NOIR);
+                                    deplacement(deplacement_possible[0], deplacement_possible[1], b);
+                                    b->manche--;
+                                }
+                            }
+                            
+                        }
+                        
                         bool on_board = true;
                         //button menu appuyé
                         for(int i = 0; i < 4; i++){
-                            if(event.button.x > position_button[i].x && event.button.x < position_button[i].x + 300 && event.button.y > position_button[i].y && event.button.y < position_button[i].y + 100){
+                            if(event.button.x > position_button[i].x && event.button.x < position_button[i].x + w && event.button.y > position_button[i].y && event.button.y < position_button[i].y + h){
                                 printf("%d\n", i+1); // gerer menu
                                 if(click == 2){
                                     click--;
                                 }
                                 menu_variation(renderer, b, i+1, &menu);
-                                actualise_board(renderer, b);
                                 on_board = false;
                             } 
                         }
 			
+			
 			//board
-			if(menu == 4 && on_board == true && event.button.x > x && event.button.x < (8*TAILLE_T)+TAILLE_SEPARATION+ESPACE_BOARD && event.button.y > y && event.button.y < (8*TAILLE_T)+TAILLE_SEPARATION+ESPACE_BOARD){
+			if(b->nb_joueur == 2 && menu == 4 && on_board == true && event.button.x > x && event.button.x < (8*TAILLE_T)+TAILLE_SEPARATION+ESPACE_BOARD && event.button.y > y && event.button.y < (8*TAILLE_T)+TAILLE_SEPARATION+ESPACE_BOARD){
                             if(b->manche == 1){
                                 if(click == 1){
                                     if(b->board[ypos][xpos] != NULL){
@@ -1024,6 +945,91 @@ void tour_de_jeu(SDL_Renderer* renderer)
                             }
                         }
                         
+                        if(b->nb_joueur == 1 && menu == 4 && on_board == true && event.button.x > x && event.button.x < (8*TAILLE_T)+TAILLE_SEPARATION+ESPACE_BOARD && event.button.y > y && event.button.y < (8*TAILLE_T)+TAILLE_SEPARATION+ESPACE_BOARD){
+                            if(b->manche == b->position){
+                            if(b->manche == 1){
+                                if(click == 1){
+                                    if(b->board[ypos][xpos] != NULL){
+                                        if(piece_color(b->board[ypos][xpos]) == BLANC){
+                                            from = (pos) {xpos, ypos};
+                                            printf("from x = %d, y = %d\n", from.x, from.y);
+                                            
+                                            deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
+		                            for (int i = 0; i < nb_deplacement_possible; i++) {
+		                                if(verifier_mouvement(from, (pos) {deplacement_possible[i].x, deplacement_possible[i].y}, b)){
+				       	            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+						    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 100); // Vert transparent (R=0, G=255, B=0, Alpha=100)
+						    SDL_Rect rect = { deplacement_possible[i].x * TAILLE_T  + TAILLE_SEPARATION +ESPACE_BOARD,
+						                      deplacement_possible[i].y * TAILLE_T + TAILLE_SEPARATION + ESPACE_BOARD,
+						                      TAILLE_CASE, TAILLE_CASE };
+						    SDL_RenderFillRect(renderer, &rect);
+						    SDL_RenderPresent(renderer);
+		                		}
+		                            }
+                                            click++;
+                                        }
+                                    }
+                                } else {
+                                    actualise_board(renderer, b);
+                            	    to = (pos) {xpos, ypos};
+                            	    printf("to x = %d, y = %d\n", to.x, to.y);
+                            	    
+                           	    deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
+                           	    for(int i = 0; i < nb_deplacement_possible; i++){
+                           	        if(to.x == deplacement_possible[i].x && to.y == deplacement_possible[i].y){
+                           	            if(verifier_mouvement(from, to, b)){
+                           	                ajouer = true;
+                           	                deplacement(from, to, b);
+                           	    	        actualise_board(renderer, b);
+                           	    	        printf(" movement possible x = %d, y = %d\n", deplacement_possible[i].x , deplacement_possible[i].y);
+                           	            }
+                           	        }
+                                    }
+                                    click--;
+                                }                           
+                            } else if (b->manche == 2) {
+                            	if(click == 1){
+                                    if(b->board[ypos][xpos] != NULL){
+                                        if(piece_color(b->board[ypos][xpos]) == NOIR){
+                                            from = (pos) {xpos, ypos};
+                                            printf("from x = %d, y = %d\n", from.x, from.y);
+                                            
+                                            deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
+		                            for (int i = 0; i < nb_deplacement_possible; i++) {
+		                                if(verifier_mouvement(from, (pos) {deplacement_possible[i].x, deplacement_possible[i].y}, b)){
+				       	            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+						    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 100); // Vert transparent (R=0, G=255, B=0, Alpha=100)
+						    SDL_Rect rect = { deplacement_possible[i].x * TAILLE_T + TAILLE_SEPARATION + ESPACE_BOARD,
+						                      deplacement_possible[i].y * TAILLE_T + TAILLE_SEPARATION + ESPACE_BOARD,
+						                      TAILLE_CASE, TAILLE_CASE };
+						    SDL_RenderFillRect(renderer, &rect);
+						    SDL_RenderPresent(renderer);
+		                		}
+		                            }
+                                            click++;
+                                        }
+                                    }
+                                } else {
+                                    actualise_board(renderer, b);
+                            	    to = (pos) {xpos, ypos};
+                            	    printf("to x = %d, y = %d\n", to.x, to.y);
+                            	    
+                           	    deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
+                           	    for(int i = 0; i < nb_deplacement_possible; i++){
+                           	        if(to.x == deplacement_possible[i].x && to.y == deplacement_possible[i].y){
+                           	            if(verifier_mouvement(from, to, b)){
+                           	                ajouer = true;
+                           	                deplacement(from, to, b);
+                           	    	        actualise_board(renderer, b);
+                           	    	        printf(" movement possible x = %d, y = %d\n", deplacement_possible[i].x , deplacement_possible[i].y);
+                           	            }
+                           	        }
+                                    }
+                                    click--;
+                                }   
+                            }
+                        }}
+                        
                         
 
                         x = TAILLE_SEPARATION + ESPACE_BOARD;
@@ -1036,10 +1042,9 @@ void tour_de_jeu(SDL_Renderer* renderer)
 			    	color c = NOIR;
 				pos roiNoir = recup_roi_with_color(c, b);
 				if (est_en_echec_et_mat(b->board[roiNoir.y][roiNoir.x], roiNoir, b)) {
-				    menu = 93;
+				    menu = 91;
 				}
-				//si on doit faire une promotion
-                        	if(b->board[to.y][to.x]->typePiece == PION && from.y == 0) menu = 7;
+                           	if(b->board[to.y][to.x]->typePiece == PION && (to.y == 0 || to.y == 7)) menu = 7; //si on doit faire une promotion
 				b->manche++;
 			    } else if (b->manche == 2) {
 			        color c = BLANC;
@@ -1047,7 +1052,7 @@ void tour_de_jeu(SDL_Renderer* renderer)
 				if (est_en_echec_et_mat(b->board[roiBlanc.y][roiBlanc.x], roiBlanc, b)) {
 				    menu = 92;
 				}
-				if(b->board[to.y][to.x]->typePiece == PION && from.y == 7) menu = 7;
+                           	if(b->board[to.y][to.x]->typePiece == PION && (to.y == 0 || to.y == 7)) menu = 7;//si on doit faire une promotion
 				b->manche--;
 			    }
 			}
@@ -1096,7 +1101,7 @@ void tour_de_jeu(SDL_Renderer* renderer)
 
 ///=========================================================
 //Lancer une nouvelle partie
-void game()
+int game()
 {
     SDL_Init(SDL_INIT_VIDEO);
     if (TTF_Init() < 0) {

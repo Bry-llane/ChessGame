@@ -72,9 +72,9 @@ char piece_caractere(piece p)
         } else if(p->typePiece == ROI){
             return 'K';
         }
-    } else {
-        return 'x'; //x comme caractere d'erreur
-    }
+    } 
+    
+    return 'x'; //x comme caractere d'erreur
 }
 
 //afficher le caractere d'une piece

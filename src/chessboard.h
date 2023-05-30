@@ -15,15 +15,19 @@ typedef struct chessboard {
 } *chessboard;
 
 chessboard create_board ();
-void vider_board(chessboard b);
 void free_board(chessboard b);
 void print_board(chessboard b);
 bool in_board(pos from);
 bool same_column_nothing_between(pos from, pos to, chessboard b);
 bool same_row_nothing_between(pos from, pos to, chessboard b);
 bool sameDiagonalNothingBetween(pos from, pos to, chessboard b);
-chessboard create_board_vide ();
+void new_board(chessboard b);
 pos recup_roi(piece piece, chessboard b);
 pos recup_roi_with_color(color c, chessboard b);
+void sauvegarder_plateau(chessboard b, const char* nom_fichier);
+void charger_plateau(chessboard b, const char* nom_fichier);
+void remplir_plateau(chessboard b);
+void faire_promotion(chessboard b, int sh);
+
 
 #endif
