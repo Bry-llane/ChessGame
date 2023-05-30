@@ -16,5 +16,7 @@ bool est_en_echec(piece roi, pos position_roi, chessboard b);
 bool est_en_echec_et_mat(piece roi, pos position_roi, chessboard b);
 bool verifier_mouvement(pos from, pos to, chessboard b);
 bool deplacement(pos from, pos to, chessboard b);
+pos trouver_piece_aleatoire(chessboard b, color couleur);
+pos* IA(chessboard b, color c) ;
 
 #endif

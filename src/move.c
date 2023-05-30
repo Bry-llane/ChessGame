@@ -1,4 +1,5 @@
 #include "move.h"
+#include <stdlib.h>
 
 pos* deplacement_valide_pion(piece p, pos from, chessboard b, int* nb_deplacements)
 {
@@ -369,57 +370,58 @@ bool deplacement(pos from, pos to, chessboard b)
 }
 
 
-/*
-bool verifier_mouvement(piece piece, pos from, pos to, chessboard b) {
-    // Copier le plateau d'échecs pour effectuer une simulation de mouvement
-    chessboard temp_board = create_board_vide();
-    memcpy(temp_board, b, sizeof(struct chessboard));
-
-    // Effectuer le mouvement sur le plateau temporaire
-    piece captured_piece = temp_board->board[to.y][to.x];
-    temp_board->board[to.y][to.x] = temp_board->board[from.y][from.x];
-    temp_board->board[from.y][from.x] = NULL;
-
-    // Obtenir la position du roi du joueur courant
-    pos position_roi;
-    //piece roi = piece_color(piece) == BLANC ? ROI_BLANC : ROI_NOIR;
-
-    for (int y = 0; y < 8; y++) {
-        for (int x = 0; x < 8; x++) {
-            if (temp_board->board[y][x]->typePiece == ROI && piece_color(temp_board->board[y][x]) == piece_color(piece)) {
-                position_roi.x = x;
-                position_roi.y = y;
-                break;
+pos trouver_piece_aleatoire(chessboard b, color couleur) {
+    // Vérifier si le plateau est valide
+    if (b == NULL || b->board == NULL) {
+        printf("Erreur : Plateau invalide.\n");
+        return (pos) { -1, -1 }; // Retourner une position invalide
+    }
+    
+    // Générer une liste de positions valides pour les pièces de la couleur donnée
+    pos positions_valides[64]; // Tableau de positions valides (max 64 cases)
+    int nb_positions_valides = 0; // Nombre de positions valides trouvées
+    
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            piece p = b->board[i][j];
+            if (p != NULL && p->couleur == couleur) {
+                positions_valides[nb_positions_valides++] = (pos) { i, j };
             }
         }
     }
-    piece roi = temp_board->board[position_roi.y][position_roi.x];
-
-    // Vérifier si le roi est en échec après le mouvement
-    bool est_en_echec_apres_mouvement = est_en_echec(roi, position_roi, temp_board);
-
-    // Vérifier si le roi est en échec et mat après le mouvement
-    bool est_en_echec_et_mat_apres_mouvement = est_en_echec_et_mat(roi, position_roi, temp_board);
-
-    // Annuler le mouvement simulé
-    annuler_deplacement(temp_board, from, to, captured_piece);
-
-    // Si le roi est en échec après le mouvement, le mouvement est invalide
-    if (est_en_echec_apres_mouvement) {
-        free(temp_board);
-        return false;
+    
+    // Vérifier si des positions valides ont été trouvées
+    if (nb_positions_valides == 0) {
+        printf("Aucune pièce de couleur donnée sur le plateau.\n");
+        return (pos) { -1, -1 }; // Retourner une position invalide
     }
-
-    // Si le roi est en échec et mat après le mouvement, le mouvement est invalide
-    if (est_en_echec_et_mat_apres_mouvement) {
-        free(temp_board);
-        return false;
-    }
-
-    // Le mouvement est valide
-    free(temp_board);
-    return true;
+    
+    // Sélectionner une position aléatoire parmi les positions valides
+    int indice_aleatoire = rand() % nb_positions_valides;
+    return positions_valides[indice_aleatoire];
 }
-*/
 
-
+pos* IA(chessboard b, color c) {
+    bool choix = false;
+    pos* deplacement_possible;
+    int nb_deplacement_possible;
+    pos* move = malloc(2 * sizeof(pos)); // Allouer de l'espace pour les positions "from" et "to"
+    
+    while (!choix) {
+        pos from = trouver_piece_aleatoire(b, c);
+        
+        deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
+        if (nb_deplacement_possible > 0) {
+            int indice_aleatoire = rand() % nb_deplacement_possible;
+            pos to = deplacement_possible[indice_aleatoire];
+            
+            if (verifier_mouvement(from, to, b)) {
+                move[0] = from;
+                move[1] = to;
+                choix = true;
+            }
+        }
+    }
+    
+    return move;
+}

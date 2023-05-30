@@ -64,6 +64,8 @@ chessboard create_board ()
     return B;
 }
 
+
+
 //liberer le tableau de jeu
 void free_board(chessboard b)
 {
@@ -183,18 +185,26 @@ bool sameDiagonalNothingBetween(pos from, pos to, chessboard b)
     return true;
 }
 
-void vider_board(chessboard B)
-{
-    //cases vides
-    for(int i = 0; i < 8; i++){
-        for(int j = 0; j < 8; j++){
-            B->board[i][j] = NULL;
+
+void new_board(chessboard b) {
+    // Vérifier le paramètre
+    if (b == NULL || b->board == NULL) {
+        printf("Erreur : Paramètre invalide.\n");
+        return;
+    }
+    
+    // Réinitialiser toutes les positions du jeu
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            b->board[i][j] = NULL;
         }
     }
     
-    B->nb_joueur = 0;
-    B->position = 0;
-    B->manche = 1;
+    b->nb_joueur = 0;
+    b->position = 0;
+    b->manche = 1;
+    
+    printf("Nouvelle partie initialisée.\n");
 }
 
 pos recup_roi(piece piece, chessboard b)
@@ -373,6 +383,52 @@ void charger_plateau(chessboard b, const char* nom_fichier) {
     printf("Le plateau a été chargé depuis le fichier %s.\n", nom_fichier);
 }
 
+void remplir_plateau(chessboard b) {
+    // Vérifier si le plateau est valide
+    if (b == NULL || b->board == NULL) {
+        printf("Erreur : Plateau invalide.\n");
+        return;
+    }
+    
+    // Placer les pièces noires sur la première rangée
+    b->board[0][0] = create_piece(TOUR, NOIR);
+    b->board[0][1] = create_piece(CAVALIER, NOIR);
+    b->board[0][2] = create_piece(FOU, NOIR);
+    b->board[0][3] = create_piece(REINE, NOIR);
+    b->board[0][4] = create_piece(ROI, NOIR);
+    b->board[0][5] = create_piece(FOU, NOIR);
+    b->board[0][6] = create_piece(CAVALIER, NOIR);
+    b->board[0][7] = create_piece(TOUR, NOIR);
+
+    // Placer les pions noirs sur la deuxième rangée
+    for (int j = 0; j < 8; j++) {
+        b->board[1][j] = create_piece(PION, NOIR);
+    }
+    
+    // Placer les pièces blanches sur la huitième rangée
+    b->board[7][0] = create_piece(TOUR, BLANC);
+    b->board[7][1] = create_piece(CAVALIER, BLANC);
+    b->board[7][2] = create_piece(FOU, BLANC);
+    b->board[7][3] = create_piece(REINE, BLANC);
+    b->board[7][4] = create_piece(ROI, BLANC);
+    b->board[7][5] = create_piece(FOU, BLANC);
+    b->board[7][6] = create_piece(CAVALIER, BLANC);
+    b->board[7][7] = create_piece(TOUR, BLANC);
+
+    // Placer les pions blancs sur la septième rangée
+    for (int j = 0; j < 8; j++) {
+        b->board[6][j] = create_piece(PION, BLANC);
+    }
+    
+    // Placer les cases vides sur les autres cases du plateau
+    for (int i = 2; i < 6; i++) {
+        for (int j = 0; j < 8; j++) {
+            b->board[i][j] = NULL;
+        }
+    }
+}
+
+
 void faire_promotion(chessboard b, int sh) {
     // Vérifier le paramètre
     if (b == NULL || b->board == NULL) {
@@ -389,20 +445,20 @@ void faire_promotion(chessboard b, int sh) {
                 if ((p->couleur == BLANC && i == 0) || (p->couleur == NOIR && i == 7)) {
                     switch (sh) {
                         case 1:
-                            p->typePiece = TOUR;
+                            b->board[i][j] = create_piece(TOUR, p->couleur);
                             break;
                         case 2:
-                            p->typePiece = CAVALIER;
+                            b->board[i][j] = create_piece(CAVALIER, p->couleur);
                             break;
                         case 3:
-                            p->typePiece = FOU;
+                            b->board[i][j] = create_piece(FOU, p->couleur);
                             break;
                         case 4:
-                            p->typePiece = REINE;
+                            b->board[i][j] = create_piece(REINE, p->couleur);
                             break;
                         default:
                             printf("Choix invalide. Le pion sera promu en Reine par defaut.\n");
-                            p->typePiece = REINE;
+                            b->board[i][j] = create_piece(REINE, p->couleur);
                             break;
                     }
                 }

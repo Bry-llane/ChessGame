@@ -723,18 +723,24 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
                 remove("./save/save1.txt");
             } 
             sauvegarder_plateau(b, "./save/save1.txt");
+            new_board(b);
+            remplir_plateau(b);
             m = 1;
         } else if(but == 2){
             if(existeFile("./save/save2.txt")){
                 remove("./save/save2.txt");
             }
-            sauvegarder_plateau(b, "./save/save3.txt");
+            sauvegarder_plateau(b, "./save/save2.txt");
+            new_board(b);
+            remplir_plateau(b);
             m = 1;
         } else if(but == 3){
             if(existeFile("./save/save3.txt")){
                 remove("./save/save3.txt");
             }
             sauvegarder_plateau(b, "./save/save3.txt");
+            new_board(b);
+            remplir_plateau(b);
             m = 1;
         } else if(but == 4){
             actualise_board(renderer, b);
@@ -742,6 +748,8 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
         }
     } else if (*menu == 1){ //menu
         if(but == 1){
+            new_board(b);
+            remplir_plateau(b);
             m = 2;
         } else if(but == 2){
             m = 5;
@@ -752,17 +760,17 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
         }
     } else if (*menu == 2){  //menu nb joueur
         if(but == 1){
-            m = 4;
-            actualise_board(renderer, b);
-            b->nb_joueur = 0;
+            m = 2;
         } else if(but == 2){
             m = 3;
+            actualise_board(renderer, b);
             b->nb_joueur = 1;
         } else if(but == 3){
             m = 4;
             actualise_board(renderer, b);
             b->nb_joueur = 2;
         } else if(but == 4){
+            new_board(b);
             m = 1;
         }
     } else if (*menu == 3){  //position joueur joueur
@@ -815,7 +823,7 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
         m = 4;
     } else if (*menu == 91){  //blanc win
         if(but == 2){
-            m = 4;
+            m = 1;
         }
     } else if (*menu == 92){  //menu nb joueur
         if(but == 2){
@@ -831,7 +839,6 @@ void tour_de_jeu(SDL_Renderer* renderer)
 {
     chessboard b = create_board();
     draw_board(renderer);
-    vider_board(b);
     
     int menu = 1;
     render_menu(renderer, b, menu);
@@ -859,12 +866,48 @@ void tour_de_jeu(SDL_Renderer* renderer)
     
     while (program_launched){
         SDL_Event event;
-
-        if(b->nb_joueur == 1){
+        
+        /*if(b->nb_joueur == 1 || b->nb_joueur == 0){
             if(b->manche != b->position){
-                //IA
+                if(b->manche == 1){
+                    bool choix = false;
+    
+		    while (!choix) {
+		        from = trouver_piece_aleatoire(b, BLANC);
+			deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
+			if (nb_deplacement_possible > 0) {
+			    int indice_aleatoire = rand() % nb_deplacement_possible;
+			    to = deplacement_possible[indice_aleatoire];
+			    
+			    if (verifier_mouvement(from, to, b)) {
+				choix = true;
+			    }
+			}
+		    }
+	       	    deplacement(from, to, b);
+		    actualise_board(renderer, b);
+                }  else {
+                    bool choix = false;
+    
+		    while (!choix) {
+		        from = trouver_piece_aleatoire(b, NOIR);
+			deplacement_possible = deplacement_valide(b->board[from.y][from.x], from, b, &nb_deplacement_possible);
+			if (nb_deplacement_possible > 0) {
+			    int indice_aleatoire = rand() % nb_deplacement_possible;
+			    to = deplacement_possible[indice_aleatoire];
+			    
+			    if (verifier_mouvement(from, to, b)) {
+				choix = true;
+			    }
+			}
+		    }
+	       	    deplacement(from, to, b);
+		    actualise_board(renderer, b);
+                }
+                
             }
-        }
+        }*/
+        
 	while(SDL_PollEvent(&event)){
                 switch(event.type)
                 {
@@ -980,6 +1023,7 @@ void tour_de_jeu(SDL_Renderer* renderer)
                                 }   
                             }
                         }
+                        
                         
 
                         x = TAILLE_SEPARATION + ESPACE_BOARD;
