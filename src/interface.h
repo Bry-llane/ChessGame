@@ -31,7 +31,6 @@ SDL_Window* create_window(const char* title);
 SDL_Renderer* create_renderer(SDL_Window* window);
 void destroy_window_and_renderer(SDL_Window* window, SDL_Renderer* renderer);
 SDL_Texture* loadTexture(SDL_Renderer* renderer, char* path);
-int isInt();
 bool existeFile(char* file);
 button createbutton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y);
 button createtitle(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y);

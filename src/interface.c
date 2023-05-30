@@ -73,25 +73,6 @@ SDL_Texture* loadTexture(SDL_Renderer* renderer, char* path)
 }
 
 ///=========================================================
-//Verifie si le nombre entrer est un entier
-int isInt()
-{
-    int num;
-    char c;
-
-    while(true){
-        if(scanf("%d", &num)!= 1){
-            printf("Veuillez rentrer un chiffre : ");
-            while((c = getchar()) != '\n' && c != EOF);
-        } else {
-           break;
-        }
-    }
-
-    return num;
-}
-
-///=========================================================
 //Verifie l'existence d'un fichier
 bool existeFile(char* file)
 {
@@ -476,7 +457,7 @@ void render_menu(SDL_Renderer* renderer, chessboard b, int menu)
     	b1 = " 0 ";
     	b2 = " 1 ";
     	b3 = " 2 ";
-    	b4 = " Quit ";
+    	b4 = " Return ";
     }
 
     if(menu == 3){
@@ -580,9 +561,9 @@ void render_menu(SDL_Renderer* renderer, chessboard b, int menu)
     if(menu == 91){
     	t = " END ";
 
-	b1 = " Joueur Blanc win ";
+	b1 = " Player White win ";
 
-        b2 = " Quit ";
+        b2 = " Return ";
         
     	b3 = "  ";
     	
@@ -592,9 +573,9 @@ void render_menu(SDL_Renderer* renderer, chessboard b, int menu)
     if(menu == 92){
     	t = " END ";
 
-	b1 = " Joueur Noir win ";
+	b1 = " Player Black win ";
 
-        b2 = " Quit ";
+        b2 = " Return ";
         
     	b3 = "  ";
     	
@@ -705,7 +686,7 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
             actualise_board(renderer, b);
             b->nb_joueur = 2;
         } else if(but == 4){
-            new_board(b);
+
             m = 1;
         }
     } else if (*menu == 3){  //position joueur joueur
@@ -758,6 +739,7 @@ void menu_variation(SDL_Renderer* renderer, chessboard b, int but, int *menu){
         }
     } else if (*menu == 7){  //promotion
         faire_promotion(b, but);
+        actualise_board(renderer, b);
         m = 4;
     } else if (*menu == 91){  //blanc win
         if(but == 2){
@@ -843,7 +825,6 @@ void tour_de_jeu(SDL_Renderer* renderer)
                                     b->manche--;
                                 }
                             }
-                            
                         }
                         
                         bool on_board = true;

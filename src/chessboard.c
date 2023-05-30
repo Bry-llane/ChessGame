@@ -127,65 +127,6 @@ bool in_board(pos from)
     return (from.x >= 0 && from.x < 8 && from.y >= 0 && from.y < 8);
 }
 
-bool same_column_nothing_between(pos from, pos to, chessboard b)
-{
-    // Vérifier si les positions sont sur la même colonne
-    if (from.x != to.x) {
-        return false;
-    }
-
-    // Vérifier s'il y a des pièces entre les positions
-    int start_y = (from.y < to.y) ? from.y + 1 : to.y + 1;
-    int end_y = (from.y < to.y) ? to.y - 1 : from.y - 1;
-
-    for (int y = start_y; y <= end_y; y++) {
-        if (b->board[y][from.x] != NULL) {
-            return false; // Il y a une pièce entre les positions
-        }
-    }
-
-    return true; // Aucune pièce entre les positions sur la même colonne
-}
-
-bool same_row_nothing_between(pos from, pos to, chessboard b)
-{
-    // Vérifier si les positions sont sur la même ligne
-    if (from.y != to.y) {
-        return false;
-    }
-
-    int start_x = (from.x < to.x) ? from.x + 1 : to.x + 1;
-    int end_x = (from.x < to.x) ? to.x : from.x;
-
-    for (int x = start_x; x < end_x; x++) {
-        if (b->board[from.y][x] != NULL) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool sameDiagonalNothingBetween(pos from, pos to, chessboard b)
-{
-    int delta_x = (from.x < to.x) ? 1 : -1;
-    int delta_y = (from.y < to.y) ? 1 : -1;
-
-    int x = from.x + delta_x;
-    int y = from.y + delta_y;
-
-    while (x != to.x && y != to.y) {
-        if (b->board[y][x] != NULL) {
-            return false;
-        }
-        x += delta_x;
-        y += delta_y;
-    }
-
-    return true;
-}
-
-
 void new_board(chessboard b) {
     // Vérifier le paramètre
     if (b == NULL || b->board == NULL) {
